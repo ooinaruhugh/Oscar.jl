@@ -2,6 +2,7 @@ include("GaloisGrp.jl")
 include("Rings.jl")
 include("ModStd.jl")
 include("PlaneCurve.jl")
+<<<<<<< HEAD
 include("GITFans.jl")
 include("GModule.jl")
 include("MPolyRingSparse.jl")
@@ -30,3 +31,6 @@ include("Schemes/BlowupMorphism.jl")
 include("Schemes/ToricSchemes/include.jl")
 
 include("ExteriorAlgebra/ExteriorAlgebra.jl")
+=======
+include("IntersectionTheory.jl")
+>>>>>>> b17626e19f (Adding IntersectionTheory to Oscar)
