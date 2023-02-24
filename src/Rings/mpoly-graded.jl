@@ -2440,6 +2440,10 @@ function AbstractAlgebra.promote_rule(::Type{MPolyDecRingElem{S, T}}, ::Type{U})
   end
 end
 
+function AbstractAlgebra.promote_rule(::Type{MPolyDecRingElem{S, T}}, ::Type{MPolyDecRingElem{S, T}}) where {S, T}
+  return MPolyDecRingElem{S, T}
+end
+
 ################################################################################
 #
 #  Random homogeneous polynomials
