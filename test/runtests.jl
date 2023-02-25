@@ -82,30 +82,30 @@ end
 end
 # Used in both Rings/slpolys-test.jl and StraightLinePrograms/runtests.jl
 const SLP = Oscar.StraightLinePrograms
-# include("printing.jl")
-# 
-# include("PolyhedralGeometry/runtests.jl")
-# include("Combinatorics/runtests.jl")
-# 
-# include("GAP/runtests.jl")
-# include("Groups/runtests.jl")
-# 
-# include("Rings/runtests.jl")
-# 
-# include("NumberTheory/nmbthy-test.jl")
-# 
-# if Oscar.is_dev
-#   include("Experimental/GITFans-test.jl")
-# end
-# 
-# include("Experimental/PlaneCurve-test.jl")
-# include("Experimental/galois-test.jl")
-# include("Experimental/gmodule-test.jl")
-# include("Experimental/ModStdQt-test.jl")
-# include("Experimental/ModStdNF-test.jl")
-# include("Experimental/MPolyRingSparse-test.jl")
-# include("Experimental/MatrixGroups-test.jl")
-# include("Experimental/ExteriorAlgebra-test.jl")
+include("printing.jl")
+
+include("PolyhedralGeometry/runtests.jl")
+include("Combinatorics/runtests.jl")
+
+include("GAP/runtests.jl")
+include("Groups/runtests.jl")
+
+include("Rings/runtests.jl")
+
+include("NumberTheory/nmbthy-test.jl")
+
+if Oscar.is_dev
+  include("Experimental/GITFans-test.jl")
+end
+
+include("Experimental/PlaneCurve-test.jl")
+include("Experimental/galois-test.jl")
+include("Experimental/gmodule-test.jl")
+include("Experimental/ModStdQt-test.jl")
+include("Experimental/ModStdNF-test.jl")
+include("Experimental/MPolyRingSparse-test.jl")
+include("Experimental/MatrixGroups-test.jl")
+include("Experimental/ExteriorAlgebra-test.jl")
 include("Experimental/IntersectionTheory-test.jl")
 
 include("Geometry/K3Auto.jl")
