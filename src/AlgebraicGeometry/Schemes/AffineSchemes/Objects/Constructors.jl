@@ -109,7 +109,11 @@ Spectrum
 spec(R::MPolyRing, I::MPolyIdeal, U::AbsMPolyMultSet) = AffineScheme(MPolyQuoLocRing(R, I, U))
 affine_scheme(R::MPolyRing, I::MPolyIdeal, U::AbsMPolyMultSet) = AffineScheme(MPolyQuoLocRing(R, I, U))
 
+#TODO Docstring
+Spec(R::Ring, I::Hecke.PIDIdeal) = Spec(residue_ring(R, gen(I)))
 
+# Need this separately because ideals of ZZ are not subobjects of Hecke.PIDIdeal
+Spec(R::ZZRing, I) = Spec(residue_ring(R, gen(I)))
 
 ########################################################
 # (2) Copy constructors
@@ -350,6 +354,13 @@ function subscheme(X::AffineScheme, f::Vector{<:RingElem})
   return subscheme(X, ideal(OO(X), f))
 end
 subscheme(X::AbsAffineScheme, f::RingElem) = subscheme(X, ideal(OO(X), [f]))
+
+#TODO test, docstring
+subscheme(X::Spec{<:Ring, <:PolyRing}, f::RingElem) = Spec(residue_ring(OO(X), f))
+subscheme(X::Spec{<:Field, <:PolyRing}, f::Vector{<:RingElem}) = Spec(residue_ring(OO(X), gcd(f)))
+
+subscheme(X::Spec{ZZRing,ZZRing}, f::ZZRingElem) = Spec(residue_ring(OO(X), f))
+subscheme(X::Spec{ZZRing,ZZRing}, f::Vector{<:RingElem}) = subscheme(X, gcd(f))
 
 
 @doc raw"""
