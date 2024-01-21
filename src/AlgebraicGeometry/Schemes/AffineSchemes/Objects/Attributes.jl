@@ -438,6 +438,10 @@ end
   return dim(modulus(OO(X)))
 end
 
+@attr function dim(X::AbsSpec{<:Ring, <:PolyRing})
+  return dim(OO(X))
+end
+
 @doc raw"""
     codim(X::AbsSpec)
 
