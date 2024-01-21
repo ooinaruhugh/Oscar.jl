@@ -58,6 +58,21 @@ over a base ring ``𝕜`` of type `BaseRingType`.
     return new{typeof(kk), typeof(OO)}(OO, kk)
   end
 
+  # These could be possible type aliases to be uniform with MPoly...
+  # PolyQuoRing = ResidueRing{<:PolyRingElem}
+  # PolyLocRing = Loc{<:RingElem}
+  #TODO test
+  function AffineScheme(OO::PolyRing{<:FieldElem})
+    kk = coefficient_ring(OO)
+    return new{typeof(kk), typeof(OO)}(OO,kk)
+  end
+  
+  #TODO test
+  function AffineScheme(OO::ResidueRing{<:PolyRingElem})
+    kk = coefficient_ring(base_ring(OO))
+    return new{typeof(kk), typeof(OO)}(OO, kk)
+  end
+
   function AffineScheme(R::Ring)
     return new{typeof(ZZ), typeof(R)}(R, ZZ)
   end
