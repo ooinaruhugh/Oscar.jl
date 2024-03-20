@@ -54,13 +54,13 @@
 function _torusinvariant_weil_divisors(X::NormalToricVariety; check::Bool=false, algorithm::Symbol=:via_polymake)
   return get_attribute!(X, :_torusinvariant_weil_divisors) do
     ray_list = rays(polyhedral_fan(X))
-    ideal_sheaves = Vector{IdealSheaf}()
+    ideal_sheaves = Vector{AbsIdealSheaf}()
     if algorithm == :via_polymake
       ideal_sheaves = [_ideal_sheaf_via_polymake(X, i; check) for i in 1:length(ray_list)]
     elseif algorithm == :via_oscar
       for tau in ray_list
         tau_dual = polarize(cone(tau))
-        ideal_dict = IdDict{AbsSpec, Ideal}()
+        ideal_dict = IdDict{AbsAffineScheme, Ideal}()
         for U in affine_charts(X)
           if !(tau in cone(U))
             ideal_dict[U] = ideal(OO(U), one(OO(U)))
@@ -76,14 +76,14 @@ function _torusinvariant_weil_divisors(X::NormalToricVariety; check::Bool=false,
     else
       error("algorithm not recognized")
     end
-    generating_divisors = [WeilDivisor(X, ZZ, IdDict{IdealSheaf, ZZRingElem}(I => one(ZZ))) for I in ideal_sheaves]
+    generating_divisors = [WeilDivisor(X, ZZ, IdDict{AbsIdealSheaf, ZZRingElem}(I => one(ZZ))) for I in ideal_sheaves]
     result = generating_divisors
     return result
   end::Vector{<:AbsWeilDivisor}
 end
 
 function _ideal_sheaf_via_polymake(X::NormalToricVariety, i::Int; check::Bool=false)
-  return _ideal_sheaf_via_polymake(X, [i==j ? one(ZZ) : zero(ZZ) for j in 1:nrays(polyhedral_fan(X))])
+  return _ideal_sheaf_via_polymake(X, [i==j ? one(ZZ) : zero(ZZ) for j in 1:n_rays(polyhedral_fan(X))])
 end
 
 function _ideal_sheaf_via_polymake(X::NormalToricVariety, c::Vector{ZZRingElem}; check::Bool=false)
@@ -93,14 +93,14 @@ function _ideal_sheaf_via_polymake(X::NormalToricVariety, c::Vector{ZZRingElem};
   #    combination of the rays r in the fan F. 
   #
   # Output:
-  #  an IdealSheaf representing this divisor, but not a divisor itself, yet
+  #  an AbsIdealSheaf representing this divisor, but not a divisor itself, yet
   #
   # The rays correspond to 'primitive divisors' from which everything 
   # else can be composed in the toric case. If we can write down ideal 
   # sheaves for these, we can hence do so for every divisor.
   @assert all(x->x>=0, c) "divisor must be effective"
   ray_list = rays(polyhedral_fan(X)) # All rays of the polyhedral fan of X
-  ideal_dict = IdDict{AbsSpec, Ideal}() # The final output: A list of ideals, one for each 
+  ideal_dict = IdDict{AbsAffineScheme, Ideal}() # The final output: A list of ideals, one for each 
                                         # affine_chart of X
 
   for U in affine_charts(X) # Iterate through the charts

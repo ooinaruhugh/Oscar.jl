@@ -23,7 +23,7 @@ Mimicking the standard arithmetic for fractions, ``R[U^{-1}]`` can be made into 
 \iota : R\to R[U^{-1}],\; r \mapsto \frac{r}{1}.
 ```
 Given an ``R``-module ``M``, the analogous construction yields an ``R[U^{-1}]``-module ``M[U^{-1}]`` which is
-called the *localization  of ``M`` at ``U``*. See the section on modules.
+called the *localization  of ``M`` at ``U``*. See the section on [modules](@ref modules_multivariate).
 
 Our focus in this section is on localizing multivariate polynomial rings and their quotients. The starting point
 for this is to provide functionality for handling (several types of) multiplicatively closed subsets of multivariate
@@ -290,7 +290,7 @@ internally represented by a pair `(r, u)` of elements of `R`, then
 - `parent(f)` refers to `RQL`,
 - `numerator(f)` to the image of `r` in `RQ`, and
 - `denominator(f)` to the image of `u` in `RQ`.
-That is, the behaviour of the functions `numerator` and `denominator` reflects the mathematical viewpoint
+That is, the behavior of the functions `numerator` and `denominator` reflects the mathematical viewpoint
 of representing `f` by pairs of elements of `RQ` and not the internal representation of `f` as pairs of elements of `R`.
 
 ##### Examples

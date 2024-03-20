@@ -22,10 +22,11 @@ function (fac::ResolutionModuleFactory{ChainType})(c::AbsHyperComplex, I::Tuple)
   end
 
   if isone(i)
-    aug = hom(c[0], fac.orig_mod, gens(fac.orig_mod))
+    aug = hom(c[0], fac.orig_mod, gens(fac.orig_mod); check=false)
+    aug.generators_map_to_generators = true
     K, inc = kernel(aug)
     next = _make_free_module(K, gens(K))
-    phi = hom(next, c[0], ambient_representatives_generators(K))
+    phi = hom(next, c[0], ambient_representatives_generators(K); check=false)
     push!(fac.map_cache, phi)
     return next
   end
@@ -45,7 +46,7 @@ function (fac::ResolutionModuleFactory{ChainType})(c::AbsHyperComplex, I::Tuple)
     return next
   end
   next = _make_free_module(K, gens(K))
-  phi = hom(next, c[i-1], ambient_representatives_generators(K))
+  phi = hom(next, c[i-1], ambient_representatives_generators(K); check=false)
   push!(fac.map_cache, phi)
   
   return next
@@ -54,10 +55,10 @@ end
 function zero_object(M::ModuleFP)
   if is_graded(M)
     result = graded_free_module(base_ring(M), [])
-    return result, hom(result, M, elem_type(M)[])
+    return result, hom(result, M, elem_type(M)[]; check=false)
   else
     result = FreeMod(base_ring(M), 0)
-    return result, hom(result, M, elem_type(M)[])
+    return result, hom(result, M, elem_type(M)[]; check=false)
   end
 end
 
@@ -99,7 +100,8 @@ function free_resolution(::Type{T}, M::SubquoModule{RET}) where {T<:SimpleFreeRe
                                  )
   result = SimpleFreeResolution(M, internal_complex)
   MC = ZeroDimensionalComplex(M)[0:0] # Wrap MC as a 1-dimensional complex concentrated in degree 0
-  aug_map = hom(result[(0,)], M, gens(M)) # The actual augmentation map
+  aug_map = hom(result[(0,)], M, gens(M); check=false) # The actual augmentation map
+  aug_map.generators_map_to_generators = true
   aug_map_comp = MorphismFromDict(result, MC, Dict{Tuple, typeof(aug_map)}([(0,)=>aug_map]))
   result.augmentation_map = aug_map_comp
   return result, aug_map_comp
@@ -134,13 +136,16 @@ augmentation_map(c::SimpleFreeResolution) = c.augmentation_map
 function betti(b::SimpleFreeResolution; project::Union{FinGenAbGroupElem, Nothing} = nothing, reverse_direction::Bool = false)
   return betti_table(b; project, reverse_direction)
 end
-function betti_table(C::AbsHyperComplex; project::Union{FinGenAbGroupElem, Nothing} = nothing, reverse_direction::Bool=false)
+function betti_table(C::AbsHyperComplex; 
+    lower_bound::Union{Int, Nothing}=(has_lower_bound(C) ? Oscar.lower_bound(C) : nothing),
+    upper_bound::Union{Int, Nothing}=(has_upper_bound(C) ? Oscar.upper_bound(C) : nothing),
+    project::Union{FinGenAbGroupElem, Nothing} = nothing, reverse_direction::Bool=false
+  )
   @assert dim(C) == 1 "complex must be one-dimensional"
-  @assert has_upper_bound(C) "no upper bound known for this resolution"
+  @assert lower_bound !== nothing && upper_bound !== nothing "explicit bounds must be known"
+  @assert direction(C, 1) == :chain "only implemented for chain complexes"
   generator_count = Dict{Tuple{Int, Any}, Int}()
-  rng = upper_bound(C):-1:lower_bound(C)
-  n = first(rng)
-  for i in 0:upper_bound(C)
+  for i in lower_bound:upper_bound
     @assert is_graded(C[i]) "one of the modules in the graded free resolution is not graded"
     module_degrees = degree.(gens(C[i]))
     for degree in module_degrees
@@ -151,12 +156,16 @@ function betti_table(C::AbsHyperComplex; project::Union{FinGenAbGroupElem, Nothi
   return BettiTable(generator_count, project = project, reverse_direction = reverse_direction)
 end
 
-function minimal_betti_table(C::AbsHyperComplex)
+function minimal_betti_table(C::AbsHyperComplex;
+    lower_bound::Union{Int, Nothing}=(has_lower_bound(C) ? Oscar.lower_bound(C) : nothing),
+    upper_bound::Union{Int, Nothing}=(has_upper_bound(C) ? Oscar.upper_bound(C) : nothing)
+  )
   @assert dim(C) == 1 "complex must be one-dimensional"
-  @assert has_lower_bound(C) && has_upper_bound(C) "resolution must be bounded"
+  @assert lower_bound !== nothing && upper_bound !== nothing "explicit bounds must be known"
+  @assert direction(C, 1) == :chain "only implemented for chain complexes"
   offsets = Dict{FinGenAbGroupElem, Int}()
   betti_hash_table = Dict{Tuple{Int, Any}, Int}()
-  for i in 1:upper_bound(C)+1
+  for i in lower_bound+1:upper_bound+1
     phi = map(C, i)
     F = domain(phi)
     @assert is_graded(F) "modules must be graded"

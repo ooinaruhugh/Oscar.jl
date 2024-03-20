@@ -42,6 +42,14 @@
 
   R, (x, y, z) = polynomial_ring(ZZ, ["x", "y", "z"])
   @test_throws ArgumentError is_normal(quo(R, ideal(R, [x - y^3]))[1])
+
+  R, (x, y, z) = polynomial_ring(QQ, ["x", "y", "z"])
+  Q, _ = quo(R, ideal(R, [(x^2 - y^3)]))
+  for (S, M, FI) in normalization(Q, algorithm=:isPrime)
+    @test parent(FI[1]) == Q
+    @test isa(FI[2], Oscar.Ideal)
+    @test parent(M(Q(x+y))) == S
+  end
 end
 
 @testset "mpoly_affine_algebras.integral_basis" begin
@@ -81,9 +89,21 @@ end
   r, (x, y) = polynomial_ring(QQ, [:x, :y])
   @test_throws ArgumentError vector_space_dimension(quo(r, ideal(r, [x^2+y^2]))[1])
   @test vector_space_dimension(quo(r, ideal(r, [x^2+y^2, x^2-y^2]))[1]) == 4
+  @test vector_space_dimension(quo(r, ideal(r, [one(r)]))[1]) == 0
 
   r, (x, y) = polynomial_ring(ZZ, [:x, :y])
   @test_throws ErrorException vector_space_dimension(quo(r, ideal(r, [x, y]))[1])
+end
+
+@testset "mpoly_affine_algebra.monomial_basis" begin
+  R, (x, y) = graded_polynomial_ring(QQ, ["x", "y"])
+  A, _ = quo(R, ideal(R, [x^2, y^3]))
+  mons = monomial_basis(A)
+  @test mons == [x*y^2, y^2, x*y, y, x, 1]
+  @test length(mons) == vector_space_dimension(A)
+
+  A, _ = quo(R, ideal(R, [one(R)]))
+  @test isempty(monomial_basis(A))
 end
 
 @testset "Subalgebra membership" begin
