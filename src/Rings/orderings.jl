@@ -1278,11 +1278,13 @@ julia> canonical_matrix(o2)
 [0   0    1]
 ```
 """
-function weight_ordering(w::Vector{Int}, o::MonomialOrdering)
+function weight_ordering(w::Vector{ZZRingElem}, o::MonomialOrdering)
   i = _support_indices(o.o)
   m = ZZMatrix(1, length(w), w)
   return MonomialOrdering(base_ring(o), MatrixOrdering(i, m, false))*o
 end
+
+weight_ordering(w::Vector{Int}, o::MonomialOrdering) = weight_ordering(ZZ.(w), o)
 
 function _matrix(nvars::Int, o::MatrixOrdering)
   r = nrows(o.matrix)
