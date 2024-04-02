@@ -6,6 +6,7 @@ version = "1.1.0-DEV"
 [deps]
 AbstractAlgebra = "c3fe647b-3220-5bb0-a1ea-a7954cac585d"
 AlgebraicSolving = "66b61cbe-0446-4d5d-9090-1ff510639f9d"
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 GAP = "c863536a-3901-11e9-33e7-d5cd0df7b904"
