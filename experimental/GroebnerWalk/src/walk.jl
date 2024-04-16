@@ -1281,25 +1281,25 @@ end
 
   QUESTION: why do we need "target" in Oscar.IdealGens(...)? 
 
-  COMMENT: I think "target" is inappropriately named. It is rather "next_ordering" (i.e the target order, refined by w)
+  COMMENT: I think "target" is inappropriately named. It is rather "next_ordering" (i.e the target order, refined by w) (done)
 =#
 function lift(
-  G::Oscar.IdealGens, # momentane GB
+  GB::Oscar.IdealGens, # momentane GB
   current::MonomialOrdering,
-  H::Oscar.IdealGens, # soll GB von initial forms sein
-  target::MonomialOrdering,
+  in_GB::Oscar.IdealGens, # soll GB von initial forms sein
+  next::MonomialOrdering,
 )
-  G = Oscar.IdealGens(
+  GB = Oscar.IdealGens(
     [
       gen - Oscar.IdealGens(
-        [reduce(gen, gens(G); ordering=current, complete_reduction=true)], target
-      )[1] for gen in gens(H)
+        [reduce(gen, gens(GB); ordering=current, complete_reduction=true)], next
+      )[1] for gen in gens(in_GB)
     ],
-    target;
+    next;
     isGB=true,
   )
 
-  return G
+  return GB
 end
 
 # lifts the Groebner basis G to the Groebner basis w.r.t. the Ring Rn like it´s done in Collart et al. (1997).
