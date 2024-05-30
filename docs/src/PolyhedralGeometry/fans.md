@@ -1,8 +1,6 @@
 ```@meta
 CurrentModule = Oscar
-DocTestSetup = quote
-  using Oscar
-end
+DocTestSetup = Oscar.doctestsetup()
 ```
 
 # Polyhedral Fans
@@ -52,7 +50,7 @@ cones(PF::PolyhedralFan, cone_dim::Int)
 cones(PF::PolyhedralFan)
 n_maximal_cones(PF::PolyhedralFan)
 n_cones(PF::PolyhedralFan)
-nrays(PF::PolyhedralFan)
+n_rays(PF::PolyhedralFan)
 rays(PF::PolyhedralFan)
 rays_modulo_lineality(PF::PolyhedralFan)
 primitive_collections(PF::PolyhedralFan)
