@@ -88,9 +88,9 @@ end
 # (2.1) MPolyRing in first argument
 
 function is_subscheme(
-    X::AbsAffineScheme{BRT, RT},
-    Y::AbsAffineScheme{BRT, RT}
-  ) where {BRT, RT<:MPolyRing}
+    X::AbsAffineScheme{BRT, <:MPolyRing},
+    Y::AbsAffineScheme{BRT, <:MPolyRing}
+  ) where {BRT}
   return OO(X) === OO(Y)
 end
 
@@ -138,9 +138,9 @@ end
 
 
 function is_subscheme(
-    X::AbsAffineScheme{BRT, RT},
-    Y::AbsAffineScheme{BRT, RT}
-  ) where {BRT, RT<:MPolyQuoRing}
+    X::AbsAffineScheme{BRT, <:MPolyQuoRing},
+    Y::AbsAffineScheme{BRT, <:MPolyQuoRing}
+  ) where {BRT}
   R = ambient_coordinate_ring(X)
   R === ambient_coordinate_ring(Y) || return false
   return issubset(saturated_ideal(defining_ideal(Y)), saturated_ideal(defining_ideal(X)))
@@ -192,9 +192,9 @@ end
 
 
 function is_subscheme(
-    X::AbsAffineScheme{BRT, RT},
-    Y::AbsAffineScheme{BRT, RT}
-  ) where {BRT, RT<:MPolyLocRing}
+    X::AbsAffineScheme{BRT, <:MPolyLocRing},
+    Y::AbsAffineScheme{BRT, <:MPolyLocRing}
+  ) where {BRT}
   R = ambient_coordinate_ring(X)
   R === ambient_coordinate_ring(Y) || return false
   UX = inverted_set(OO(X))
@@ -257,9 +257,9 @@ end
 
 
 function is_subscheme(
-    X::AbsAffineScheme{BRT, RT},
-    Y::AbsAffineScheme{BRT, RT}
-  ) where {BRT, RT<:MPolyQuoLocRing{<:Any, <:Any, <:Any, <:Any, <:MPolyPowersOfElement}}
+    X::AbsAffineScheme{BRT, <:MPolyQuoLocRing{<:Any, <:Any, <:Any, <:Any, <:MPolyPowersOfElement}},
+    Y::AbsAffineScheme{BRT, <:MPolyQuoLocRing{<:Any, <:Any, <:Any, <:Any, <:MPolyPowersOfElement}}
+  ) where {BRT}
   R = ambient_coordinate_ring(X)
   R === ambient_coordinate_ring(Y) || return false
   UX = inverted_set(OO(X))
@@ -527,7 +527,7 @@ end
 # TODO: projective schemes, covered schemes
 
 @doc raw"""
-   is_equidimensional(X::AbsAffineScheme{<:Field, <:MPolyAnyRing})
+    is_equidimensional(X::AbsAffineScheme{<:Field, <:MPolyAnyRing})
 
 Check whether the scheme `X` is equidimensional.
 
@@ -593,7 +593,7 @@ end
 # TODO: projective schemes
 
 @doc raw"""
-   is_reduced(X::AbsAffineScheme{<:Field, <:MPolyAnyRing})
+    is_reduced(X::AbsAffineScheme{<:Field, <:MPolyAnyRing})
 
 Check whether the affine scheme `X` is reduced.
 """
@@ -726,7 +726,7 @@ is_smooth(X::AbsAffineScheme{<:Field, <:MPolyLocRing}) = true
 #    irreducible = nilradical of OO(X) is prime                   #
 ###################################################################
 @doc raw"""
-   is_irreducible(X::AbsAffineScheme)
+    is_irreducible(X::AbsAffineScheme)
 
 Check whether the affine scheme `X` is irreducible.
 
@@ -746,7 +746,7 @@ is_irreducible(X::AbsAffineScheme{<:Field,<:MPolyRing}) = true
 is_irreducible(X::AbsAffineScheme{<:Field,<:MPolyLocRing}) = true
 
 @doc raw"""
-   is_integral(X::AbsAffineScheme)
+    is_integral(X::AbsAffineScheme)
 
 Check whether the affine scheme `X` is integral, i.e. irreducible and reduced.
 """
@@ -782,7 +782,7 @@ end
 # Connectedness                                                   #
 ###################################################################
 @doc raw"""
-   is_connected(X::AbsAffineScheme)
+    is_connected(X::AbsAffineScheme)
 
 Check whether the affine scheme `X` is connected.
 """

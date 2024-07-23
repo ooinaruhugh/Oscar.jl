@@ -27,8 +27,8 @@ a *Gröbner basis*. We refer to the corresponding [section](@ref gb_fields) in t
 
 !!! note
     In Oscar, it is possible to equip multivariate polynomial rings with gradings by finitely presented groups. 
-    Most functions discussed in this chapter apply to both ungraded and graded polynomial rings. However,
-    for simplicity of the presentation, in this documentation, the functions are often only illustrated by examples with
+    Most functions related to multivariate polynomial rings discussed in this chapter apply to both the ungraded and graded case.
+	However, for simplicity of the presentation, in this documentation, the functions are often only illustrated by examples with
     focus on the former case, but work similarly for homogeneous ideals and graded modules in the latter case.
 
 !!! note
@@ -44,7 +44,7 @@ General textbooks offering details on theory and algorithms include:
 ## Contact
 
 Please direct questions about this part of OSCAR to the following people:
-* [Wolfram Decker](https://www.mathematik.uni-kl.de/en/agag/people/head/prof-dr-wolfram-decker).
+* [Wolfram Decker](https://math.rptu.de/en/wgs/agag/people/head/decker).
 
 You can ask questions in the [OSCAR Slack](https://www.oscar-system.org/community/#slack).
 

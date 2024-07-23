@@ -43,7 +43,7 @@ end
 function Base.show(io::IO, X::AbsAffineScheme)
   if has_attribute(X, :name)
     print(io, name(X))
-  elseif get(io, :supercompact, false)
+  elseif is_terse(io)
     print(io, "Affine scheme")
   elseif get_attribute(X, :is_empty, false)
     print(io, "Empty affine scheme")
@@ -174,6 +174,32 @@ end
 ########################################################################
 # Normalization                                                        #
 ########################################################################
+
+@doc raw"""
+    is_normal(X::AbsAffineScheme; check::Bool=true) -> Bool
+
+# Input:
+- a reduced scheme ``X``,
+- if `check` is `true`, then confirm that ``X`` is reduced; this is expensive.
+
+# Output:
+Returns whether the scheme ``X`` is normal.
+
+# Examples
+```jldoctest
+julia> R, (x, y, z) = rational_field()["x", "y", "z"];
+
+julia> X = spec(R);
+
+julia> is_normal(X)
+true
+```
+"""
+function is_normal(X::AbsAffineScheme; check::Bool=true)
+  !check || is_reduced(X) || return false
+  R = coordinate_ring(X)
+  return is_normal(R; check=check)
+end
 
 # Todo: Normalizations of localizations
 #function _normalization(X::AbsAffineScheme{<:Field, <:MPolyLocRing}; algorithm=:equidimDec)
@@ -392,7 +418,7 @@ function base_change(phi::Any, X::AbsAffineScheme)
   R = OO(X)
   R_red, Phi = _change_base_ring(phi, R)
   Y = spec(R_red)
-  return Y, morphism(Y, X, Phi)
+  return Y, morphism(Y, X, Phi; check=false)
 end
 
 ### Some helper functions
@@ -400,7 +426,7 @@ function _change_base_ring(phi::Any, R::MPolyRing)
   K = coefficient_ring(R)
   kk = parent(phi(zero(K)))
   P, _ = polynomial_ring(kk, symbols(R))
-  Phi = hom(R, P, phi, gens(P))
+  Phi = hom(R, P, phi, gens(P); check=false)
   return P, Phi
 end
 
@@ -423,7 +449,9 @@ function _change_base_ring(phi::Any,
   U = inverted_set(W)
   U_red = MPolyPowersOfElement(P, Phi.(denominators(U)))
   W_red, loc_map = localization(P, U_red)
-  return W_red, hom(W, W_red, compose(Phi, loc_map), check=false)
+  res_map = hom(W, W_red, compose(Phi, loc_map), check=false)
+  #@assert _has_coefficient_map(res_map)
+  return W_red, res_map
 end
 
 function _change_base_ring(phi::Any,
@@ -437,6 +465,7 @@ function _change_base_ring(phi::Any,
   I_red = ideal(W_red, Phi_W.(gens(I)))
   L_red, pr = quo(W_red, I_red)
   res = compose(restricted_map(Phi_W), pr)
-  return L_red, hom(L, L_red, res, check=false)
+  res_map = hom(L, L_red, res, check=false)
+  #@assert _has_coefficient_map(res_map)
+  return L_red, res_map
 end
-
